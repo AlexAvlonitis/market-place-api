@@ -20,7 +20,7 @@ development:
 # Do not set this db to the same as development or production.
 test:
   <<: *default
-  database: market_development
+  database: market_test
 
 production:
   <<: *default
