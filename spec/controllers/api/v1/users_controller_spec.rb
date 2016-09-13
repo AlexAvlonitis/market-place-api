@@ -51,6 +51,51 @@ RSpec.describe Api::V1::UsersController, type: :controller do
 
       it { should respond_with 422 }
     end
+  end
 
+  describe "PUT/PATCH #update" do
+    context 'When is successfuly updated' do
+      let(:user) { FactoryGirl.create(:user) }
+      user_email = { email: "fd@asd.com" }
+
+      before do
+        put :update, { id: user.id, user: user_email }, format: :json
+      end
+
+      it "renders the json representation for user updated" do
+        user_response = JSON.parse(response.body, symbolize_names: true)
+        expect(user_response[:email]).to eq user_email[:email]
+      end
+
+      it { should respond_with 201 }
+    end
+
+    context 'When is not created' do
+      let(:user) { FactoryGirl.create(:user) }
+      user_email = { email: "bademail.com" }
+
+      before do
+        put :update, { id: user.id, user: user_email }, format: :json
+      end
+
+      it "renders errors json" do
+        user_response = JSON.parse(response.body, symbolize_names: true)
+        expect(user_response).to have_key(:errors)
+      end
+
+      it "renders the json errors on why the user could not be created" do
+        user_response = JSON.parse(response.body, symbolize_names: true)
+        expect(user_response[:errors][:email]).to include "is invalid"
+      end
+
+      it { should respond_with 422 }
+    end
+  end
+
+  describe 'DELETE #destroy' do
+    let(:user) { FactoryGirl.create(:user) }
+    before { delete :destroy, { id: user.id }, format: :json }
+
+    it { should respond_with 204 }
   end
 end
