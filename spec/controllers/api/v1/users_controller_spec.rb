@@ -58,6 +58,7 @@ RSpec.describe Api::V1::UsersController, type: :controller do
       user_email = { email: "fd@asd.com" }
 
       before do
+        api_authorization_header user.auth_token
         put :update, { params: {id: user.id, user: user_email} }, format: :json
       end
 
@@ -74,6 +75,7 @@ RSpec.describe Api::V1::UsersController, type: :controller do
       user_email = { email: "bademail.com" }
 
       before do
+        api_authorization_header user.auth_token
         put :update, { params: {id: user.id, user: user_email} }, format: :json
       end
 
@@ -93,7 +95,10 @@ RSpec.describe Api::V1::UsersController, type: :controller do
 
   describe 'DELETE #destroy' do
     let(:user) { FactoryGirl.create(:user) }
-    before { delete :destroy, { params: {id: user.id} }, format: :json }
+    before do
+      api_authorization_header user.auth_token
+      delete :destroy, { params: {id: user.id} }, format: :json
+    end
 
     it { should respond_with 204 }
   end
