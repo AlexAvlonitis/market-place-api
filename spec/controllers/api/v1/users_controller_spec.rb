@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe Api::V1::UsersController, type: :controller do
-  before { request.headers['Accept'] = "application/marketplace.v1" }
 
   describe "GET #show" do
     let(:user) { FactoryGirl.create :user }
